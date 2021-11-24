@@ -122,4 +122,51 @@ public class VoteService {
         }
         return maxVotes;
     }
+
+    public List<District> delegateByDistrict() {
+        List<District> districts = new ArrayList<>();
+        for (Vote vote : votes){
+            int indexOfDistrict = findDistrict(districts, vote.getDistrictID());
+            if (indexOfDistrict == -1){
+                districts.add(new District(vote.getDistrictID(),vote.getFirstName(),vote.getLastName(), vote.getParty(), vote.getVoteNumber()));
+            }
+            else {
+                districts.get(indexOfDistrict).incVotes(vote.getVoteNumber());
+            }
+        }
+        districts.sort(new SortDistrictByID());
+        return districts;
+    }
+
+    private int findDistrict(List<District> districts, int districtID) {
+        int result = -1;
+        for (int i = 0; i < districts.size(); i++) {
+            if (districts.get(i).getDisrtictID() == districtID) {
+                result = i;
+            }
+        }
+        return result;
+    }
+
+    private List<String> prepareToWriteFile(List<District> districts) {
+        List<String> lines = new ArrayList<>();
+        for (District district: districts) {
+            lines.add(district.getDisrtictID() + " " +
+                    district.getFirstName() + " " +
+                    district.getLastName() + " " +
+                    (district.getParty() == PartyNameAbbreviation.FUG ? "Független" : district.getParty())
+            );
+        }
+        return lines;
+    }
+
+    public void writeToFile(List<District> districts, Path path) {
+        List<String> lines = prepareToWriteFile(districts);
+        try {
+            Files.write(path, lines);
+        }
+        catch (IOException ioe) {
+            throw new IllegalStateException("Cannot write file!",ioe);
+        }
+    }
 }

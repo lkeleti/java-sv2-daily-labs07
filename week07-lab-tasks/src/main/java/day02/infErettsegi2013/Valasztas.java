@@ -33,5 +33,7 @@ public class Valasztas {
         for (Delegate delegate: maxDelegates){
             System.out.printf("%s %s %s%n", delegate.getFirstName(), delegate.getLastName(), delegate.getParty() == PartyNameAbbreviation.FUG? "Független": delegate.getParty());
         }
+
+        voteService.writeToFile(voteService.delegateByDistrict(),Paths.get("src/main/resources/kepviselok.txt"));
     }
 }
