@@ -25,9 +25,20 @@ public class Courier {
         if (ride.getNumberOfDay() < lastDay) {
             throw new IllegalArgumentException("Cannot add earlier ride!");
         }
-        else if (ride.getNumberOfDay() == lastDay && ride.getNumberOfRide() <= lastNumberOfRide) {
-            throw new IllegalArgumentException("Cannot add earlier ride in a same day!");
+        else {
+            if (ride.getNumberOfDay() == lastDay && ride.getNumberOfRide() <= lastNumberOfRide) {
+                throw new IllegalArgumentException("Cannot add earlier ride in a same day!");
+            }
         }
+
+        if (ride.getNumberOfDay() > lastDay && ride.getNumberOfRide() != 1) {
+            throw new IllegalArgumentException("The first ride of the new day must start with 1!");
+        }
+
+        if (rides.isEmpty() && ride.getNumberOfRide() != 1) {
+            throw new IllegalArgumentException("The first ride must be the 1st of that day!");
+        }
+
         return true;
     }
 }
